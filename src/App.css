@@ -1,0 +1,11 @@
+/* src/App.css */
+/* src/App.css */
+body {
+  margin: 0;
+  background-color: black;
+  color: white; /* Optional: Makes text white by default */
+}
+
+.App {
+  min-height: 100vh;
+}

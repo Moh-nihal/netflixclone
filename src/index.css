@@ -1,0 +1,14 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import"tailwindcss/utilities";
+
+
+/* src/index.css */
+body, #root {
+    background-color: black;
+    color: white; /* Ensure text is readable on black background */
+    margin: 0; /* Remove default margin */
+    font-family: Arial, sans-serif; /* Optional: Ensure consistent font */
+  }
+ 
+
