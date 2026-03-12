@@ -1,26 +1,162 @@
 // src/NavBar.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
+const NavBar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [query, setQuery] = useState('');
+  const [openProfile, setOpenProfile] = useState(false);
+  const location = useLocation();
 
-export default function NavBar() {
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    setShowSearch(false);
+    setOpenProfile(false);
+  }, [location.pathname]);
+
+  const navItems = [
+    { to: '/movies', label: 'Movies' },
+    { to: '/web-series', label: 'Web Series' },
+    { to: '/tv', label: 'TV' },
+    { to: '/songs', label: 'Music' },
+    { to: '/adult', label: 'Adults' },
+  ];
+
   return (
-    <nav className="fixed top-0 w-full h-20 flex items-center font-bold bg-black text-white px-4 z-10">
-      <div className="flex-1">
-        <Link to="/">
-          <img src="data:image/png;base64,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" alt="Netflix Logo" className="h-20" /> {/* Adjust the height as needed */}
-        </Link>
-      </div>
-      <div className="flex-1 flex justify-center gap-4">
-        <Link to="/movies" className="hover:text-red-600 cursor-pointer">Movies</Link>
-        <Link to="/web-series" className="hover:text-red-600 cursor-pointer">Web-Series</Link>
-        <Link to="/tv" className="hover:text-red-600 cursor-pointer">TV</Link>
-        <Link to="/songs" className="hover:text-red-600 cursor-pointer">Songs</Link>
-        <Link to="/adult" className="hover:text-red-600 cursor-pointer">Adult</Link>
-      </div>
-      <div className="flex-1 flex justify-end">
-        <i className="fa-solid fa-magnifying-glass hover:text-gray-400 cursor-pointer" aria-label="Search"></i>
-      </div>
-    </nav>
+    <header className="fixed inset-x-0 top-0 z-30">
+      <motion.nav
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className={`mx-auto flex h-16 items-center px-4 md:h-20 md:px-8 lg:px-12 ${
+          isScrolled ? 'mt-0' : 'mt-2 md:mt-4'
+        }`}
+      >
+        <div
+          className={`flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-r from-black/75 via-black/50 to-black/30 px-4 py-2.5 text-sm text-slate-100 shadow-[0_18px_45px_rgba(15,23,42,0.85)] backdrop-blur-2xl`}
+        >
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent-violet via-slate-900 to-accent-cyan shadow-glow-accent">
+              <span className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_10%_0,rgba(248,250,252,0.75),transparent_55%)] opacity-60" />
+              <span className="relative text-[0.9rem] font-semibold tracking-[0.22em] uppercase">
+                NX
+              </span>
+            </div>
+            <div className="hidden flex-col leading-tight sm:flex">
+              <span className="text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-slate-200/90">
+                NovaX
+              </span>
+              <span className="text-[0.7rem] text-slate-400">
+                Premium cinematic streaming
+              </span>
+            </div>
+          </Link>
+
+          {/* Nav links */}
+          <div className="flex-1 hidden items-center justify-center gap-1.5 md:flex">
+            {navItems.map((item) => {
+              const active = location.pathname === item.to;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`relative rounded-full px-3 py-1.5 text-xs font-medium tracking-wide transition-colors ${
+                    active
+                      ? 'text-slate-50'
+                      : 'text-slate-300/80 hover:text-slate-100'
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 -z-10 rounded-full bg-white/10 ring-1 ring-white/20 backdrop-blur-xl"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Right cluster: search + profile */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Search */}
+            <div className="relative flex items-center">
+              <motion.div
+                animate={{
+                  width: showSearch ? 180 : 34,
+                }}
+                transition={{ duration: 0.25 }}
+                className="flex h-9 items-center overflow-hidden rounded-full border border-white/15 bg-night-elevated/80 px-2 text-xs text-slate-100 backdrop-blur-xl"
+              >
+                <button
+                  onClick={() => setShowSearch((v) => !v)}
+                  className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[0.8rem]"
+                  aria-label="Search"
+                >
+                  🔍
+                </button>
+                {showSearch && (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search titles"
+                    className="ml-2 w-full bg-transparent text-[0.78rem] placeholder:text-slate-400 focus:outline-none"
+                  />
+                )}
+              </motion.div>
+            </div>
+
+            {/* Profile */}
+            <div className="relative">
+              <button
+                onClick={() => setOpenProfile((v) => !v)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 via-slate-400 to-slate-700 text-[0.8rem] font-semibold text-slate-900 ring-2 ring-white/60 shadow-glow-soft"
+              >
+                JP
+              </button>
+              {openProfile && (
+                <div className="absolute right-0 mt-3 w-44 rounded-2xl border border-white/10 bg-night-elevated/95 p-2 text-xs text-slate-100 shadow-glow-soft backdrop-blur-2xl">
+                  <div className="px-2 py-2">
+                    <p className="text-[0.7rem] uppercase tracking-[0.18em] text-slate-400">
+                      Profile
+                    </p>
+                    <p className="mt-1 font-medium">Nova Experience</p>
+                  </div>
+                  <div className="my-1 h-px bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
+                  <button className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left text-[0.8rem] hover:bg-white/5">
+                    <span>Manage account</span>
+                    <span className="text-slate-400">⌘A</span>
+                  </button>
+                  <button className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left text-[0.8rem] hover:bg-white/5">
+                    <span>Parental controls</span>
+                  </button>
+                  <button className="mt-1 flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left text-[0.8rem] text-red-300 hover:bg-red-500/10">
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+    </header>
   );
-}
+};
+
+export default NavBar;
+

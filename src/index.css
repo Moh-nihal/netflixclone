@@ -1,14 +1,31 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
-@import"tailwindcss/utilities";
+@import "tailwindcss/utilities";
 
+/* Global app shell */
+body,
+#root {
+  @apply bg-night-bg text-slate-50;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  min-height: 100vh;
+}
 
-/* src/index.css */
-body, #root {
-    background-color: black;
-    color: white; /* Ensure text is readable on black background */
-    margin: 0; /* Remove default margin */
-    font-family: Arial, sans-serif; /* Optional: Ensure consistent font */
-  }
- 
+#root {
+  background-image: theme('backgroundImage.app-radial');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Hide native scrollbars but keep scroll behavior */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 
