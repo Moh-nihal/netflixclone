@@ -11,6 +11,8 @@ const movies = [...Array(30)].map((_, index) => ({
   duration: `${1 + (index % 3)}h ${10 + (index % 5) * 5}m`,
 }));
 
+const toWebp = (src) => src.replace(/\.(jpe?g)$/i, '.webp');
+
 const Movies = () => {
   return (
     <div className="space-y-6">
@@ -57,11 +59,16 @@ const Movies = () => {
               className="block h-full"
             >
               <div className="relative h-40 w-full sm:h-48 md:h-52 lg:h-56">
-                <img
-                  src={movie.image}
-                  alt={movie.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
+                <picture>
+                  <source type="image/webp" srcSet={toWebp(movie.image)} />
+                  <img
+                    src={movie.image}
+                    alt={movie.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/5" />
               </div>
 

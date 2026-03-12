@@ -10,6 +10,8 @@ const series = [...Array(20)].map((_, index) => ({
   tag: index % 4 === 0 ? 'New Season' : 'Binge',
 }));
 
+const toWebp = (src) => src.replace(/\.(jpe?g)$/i, '.webp');
+
 const WebSeries = () => {
   return (
     <div className="space-y-6">
@@ -53,11 +55,16 @@ const WebSeries = () => {
               className="block h-full"
             >
               <div className="relative h-40 w-full sm:h-48 md:h-52 lg:h-56">
-                <img
-                  src={show.image}
-                  alt={show.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
+                <picture>
+                  <source type="image/webp" srcSet={toWebp(show.image)} />
+                  <img
+                    src={show.image}
+                    alt={show.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5" />
               </div>
 

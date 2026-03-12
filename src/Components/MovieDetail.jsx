@@ -2,6 +2,8 @@ import React from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+const toWebp = (src) => (src ? src.replace(/\.(jpe?g)$/i, '.webp') : src);
+
 const fallbackDescription =
   'Immerse yourself in a rich cinematic universe with ultra‑sharp visuals, spatial sound, and a story that unfolds with every frame.';
 
@@ -23,6 +25,11 @@ const MovieDetail = () => {
     poster: '/images2/image1.jpg',
   };
 
+  const backdropSrc = movie.backdrop || movie.poster;
+  const posterSrc = movie.poster || movie.backdrop;
+  const backdropWebp = toWebp(backdropSrc);
+  const posterWebp = toWebp(posterSrc);
+
   return (
     <div className="relative min-h-[70vh]">
       {/* Background layer */}
@@ -33,11 +40,17 @@ const MovieDetail = () => {
           transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
           className="relative h-full w-full overflow-hidden rounded-3xl bg-night-soft/70 shadow-glow-soft"
         >
-          <img
-            src={movie.backdrop || movie.poster}
-            alt={movie.title}
-            className="h-full w-full object-cover object-top opacity-70"
-          />
+          <picture>
+            <source type="image/webp" srcSet={backdropWebp} />
+            <img
+              src={backdropSrc}
+              alt={movie.title}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+              className="h-full w-full object-cover object-top opacity-70"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-tr from-night-bg via-night-bg/80 to-transparent" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(168,85,247,0.45),transparent_55%),radial-gradient(circle_at_90%_80%,rgba(56,189,248,0.4),transparent_55%)] mix-blend-screen opacity-60" />
         </motion.div>
@@ -53,11 +66,16 @@ const MovieDetail = () => {
           className="mx-auto lg:mx-0 w-52 sm:w-60 md:w-64 lg:w-72 shrink-0 rounded-3xl bg-night-elevated/80 p-[3px] shadow-glow-accent backdrop-blur-xl"
         >
           <div className="relative h-full w-full overflow-hidden rounded-[1.3rem] bg-night-soft">
-            <img
-              src={movie.poster || movie.backdrop}
-              alt={`${movie.title} poster`}
-              className="h-full w-full object-cover"
-            />
+            <picture>
+              <source type="image/webp" srcSet={posterWebp} />
+              <img
+                src={posterSrc}
+                alt={`${movie.title} poster`}
+                loading="eager"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
           </div>
         </motion.div>

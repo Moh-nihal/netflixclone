@@ -16,6 +16,8 @@ const featured = {
   poster: '/images2/image5.jpg',
 };
 
+const toWebp = (src) => src.replace(/\.(jpe?g)$/i, '.webp');
+
 const makeRow = (id, title, subtitle, sourcePrefix, count, offset = 0) => ({
   id,
   title,
@@ -165,14 +167,20 @@ const Home = () => {
             className="group block h-full w-full"
           >
             <div className="absolute inset-0 overflow-hidden">
-              <motion.img
-                src={featured.backdrop}
-                alt={featured.title}
-                className="h-full w-full object-cover object-top"
-                initial={{ scale: 1.05 }}
-                animate={{ scale: 1.02 }}
-                transition={{ duration: 12, repeat: Infinity, repeatType: 'mirror' }}
-              />
+              <picture>
+                <source type="image/webp" srcSet={toWebp(featured.backdrop)} />
+                <motion.img
+                  src={featured.backdrop}
+                  alt={featured.title}
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="high"
+                  className="h-full w-full object-cover object-top"
+                  initial={{ scale: 1.05 }}
+                  animate={{ scale: 1.02 }}
+                  transition={{ duration: 12, repeat: Infinity, repeatType: 'mirror' }}
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/70 to-transparent" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_0_0,rgba(168,85,247,0.45),transparent_55%),radial-gradient(circle_at_120%_120%,rgba(56,189,248,0.45),transparent_55%)] mix-blend-screen opacity-60" />
             </div>
@@ -273,11 +281,16 @@ const Home = () => {
                     className="block h-full w-full"
                   >
                     <div className="relative h-full w-full overflow-hidden rounded-2xl">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
+                      <picture>
+                        <source type="image/webp" srcSet={toWebp(item.image)} />
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                      </picture>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5 opacity-90 group-hover:from-black/90 group-hover:via-black/40" />
 
                       {/* Overlay info */}
